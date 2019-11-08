@@ -3,14 +3,19 @@ package com.example.dell.picturecache;
 import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.picture.lib_rhythm.Rhythm;
 
 public class MainActivity extends Activity {
     private Button bt_loadimage;
+    private Button bt_loadimage_id;
+    private Button bt_loadimage_local;
+
     private ImageView imageView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,11 +25,32 @@ public class MainActivity extends Activity {
     }
     private void initView(){
         bt_loadimage=findViewById(R.id.bt_loadimage);
+        bt_loadimage_id=findViewById(R.id.bt_loadimage_id);
+        bt_loadimage_local=findViewById(R.id.bt_loadimage_local);
+
         imageView=findViewById(R.id.image);
         bt_loadimage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Rhythm.with(MainActivity.this).load("https://uinpay.oss-cn-shenzhen.aliyuncs.com/icon/20190515/caiu.png").error(R.drawable.ic_launcher_background).into(imageView);
+                int rid=R.drawable.robot;
+                Log.d("资源ID","rid:"+rid);
+                Rhythm.with(MainActivity.this).load("https://uinpay.oss-cn-shenzhen.aliyuncs.com/icon/20190515/caifu.png").openGif(false).error(R.drawable.robot).placeholder(R.drawable.robot).into(imageView);
+            }
+        });
+        bt_loadimage_id.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int rid=R.drawable.robot;
+                Log.d("资源ID","rid:"+rid);
+                Rhythm.with(MainActivity.this).load(rid).openGif(false).error(R.drawable.robot).placeholder(R.drawable.robot).into(imageView);
+            }
+        });
+        bt_loadimage_local.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int rid=R.drawable.robot;
+                Log.d("资源ID","rid:"+rid);
+                Rhythm.with(MainActivity.this).load("https://uinpay.oss-cn-shenzhen.aliyuncs.com/icon/20190515/caifu.png").openGif(false).error(R.drawable.robot).placeholder(R.drawable.robot).into(imageView);
             }
         });
     }

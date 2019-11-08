@@ -6,13 +6,19 @@ import android.graphics.Bitmap;
 import android.os.Environment;
 import android.os.Looper;
 import android.os.StatFs;
+import android.util.Log;
 
 import java.io.File;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static android.content.Context.ACTIVITY_SERVICE;
 import static android.content.pm.ApplicationInfo.FLAG_LARGE_HEAP;
 import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.HONEYCOMB;
+import static com.picture.lib_rhythm.TypeEnum.HTTP;
+import static com.picture.lib_rhythm.TypeEnum.LOCAL;
+import static com.picture.lib_rhythm.TypeEnum.RESOURCES;
 
 
 /**
@@ -86,4 +92,59 @@ public class Utils {
         return Looper.getMainLooper().getThread() == Thread.currentThread();
     }
 
+
+    /**
+     * 判断字符串是否为URL
+     * @param urls 用户头像key
+     * @return true:是URL、false:不是URL
+     */
+    public static boolean isHttpUrl(String urls) {
+        boolean isurl = false;
+        String regex = "(((https|http)?://)?([a-z0-9]+[.])|(www.))"
+                + "\\w+[.|\\/]([a-z0-9]{0,})?[[.]([a-z0-9]{0,})]+((/[\\S&&[^,;\u4E00-\u9FA5]]+)+)?([.][a-z0-9]{0,}+|/?)";//设置正则表达式
+        Pattern pat = Pattern.compile(regex.trim());//比对
+        Matcher mat = pat.matcher(urls.trim());
+        isurl = mat.matches();//判断是否匹配
+        if (isurl) {
+            isurl = true;
+        }
+        Log.d("--","isHttpUrl:"+isurl+"---:"+urls);
+        return isurl;
+    }
+    public static boolean isNetUrl(String url) {
+        boolean reault = false;
+        if (url != null) {
+            if (url.toLowerCase().startsWith("http") || url.toLowerCase().startsWith("rtsp") || url.toLowerCase().startsWith("mms")) {
+                reault = true;
+            }
+        }
+        return reault;
+    }
+    /**
+     * 判断字符串是否为资源ID
+     * @param resourcesId
+     * @return
+     */
+    public static boolean isResourcesId(String resourcesId){
+        try{
+            Long.parseLong(resourcesId);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
+    }
+
+    /**
+     * 得到url的具体类型
+     * @param url
+     * @return
+     */
+    public static Enum getUrlType(String url){
+        if(isNetUrl(url)){
+            return HTTP;
+        }else if(isResourcesId(url)){
+            return RESOURCES;
+        }
+        return LOCAL;
+    }
 }

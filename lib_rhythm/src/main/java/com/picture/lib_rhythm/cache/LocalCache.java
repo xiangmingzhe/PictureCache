@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.picture.lib_rhythm.utils.Utils;
 
@@ -92,6 +93,7 @@ public class LocalCache {
                 // 如果文件不存在，则创建文件夹
                 parentFile.mkdirs();
             }
+            Log.d("保存的地址:","file.getAbsolutePath():"+file.getAbsolutePath());
             fos = new FileOutputStream(file);
             // 将图片压缩到本地
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);

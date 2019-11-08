@@ -1,5 +1,6 @@
 package com.picture.lib_rhythm.cache;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
@@ -9,6 +10,9 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ImageView;
+
+import com.picture.lib_rhythm.R;
+import com.picture.lib_rhythm.widgets.gif.GifImageView;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -24,6 +28,7 @@ public class NetCache {
     private LocalCache localCache;
     private static final String TAG="NetCache";
     private Drawable errorDrawable;
+    private Context mContext;
     public NetCache(Cache lruCache,LocalCache localCache){
         this.lruCache=(LruCache) lruCache;
         this.localCache=localCache;
@@ -35,13 +40,7 @@ public class NetCache {
             ImageView imageView = (ImageView) objects[0];
             String mUrl = (String) objects[1];
             imageView.setTag(mUrl);
-            if(errorDrawable!=null){
-                boolean isSuccess=(boolean) objects[2];
-                if(!isSuccess){
-                    imageView.setImageDrawable(errorDrawable);
-                }
-            }
-
+            setErrorView(objects,imageView);
         }
     };
 
@@ -56,14 +55,28 @@ public class NetCache {
     }
 
     /**
+     * 设置错误视图
+     * @param objects
+     * @param imageView
+     */
+    private void setErrorView(Object[] objects,ImageView imageView){
+        if(errorDrawable!=null){
+            boolean isSuccess=(boolean) objects[2];
+            if(!isSuccess){
+                imageView.setImageDrawable(errorDrawable);
+            }
+        }
+    }
+    /**
      * 加载图片
      * @param iv
      * @param url
      */
-    public void loadBitmap(final ImageView iv,final String url){
-        if(iv==null||TextUtils.isEmpty(url)){
-            throw new NullPointerException("ImageView Can not be empty || url Can not be empty");
+    public void loadBitmap(final ImageView iv, final String url, Context context){
+        if(iv==null||TextUtils.isEmpty(url)||context==null){
+            throw new NullPointerException("ImageView Can not be empty || url Can not be empty || context Can not be empty");
         }
+        this.mContext=context;
         Log.d(TAG,"下载的地址:"+url);
         new Handler().post(new Runnable() {
             @Override
@@ -78,6 +91,11 @@ public class NetCache {
         });
     }
 
+    /**
+     * 尝试下加载内存-->磁盘
+     * @param url
+     * @return
+     */
     private Bitmap loadBitmap(String url){
         if(lruCache.get(url)!=null){
                 return lruCache.get(url);
@@ -198,6 +216,5 @@ public class NetCache {
 
         return null;
     }
-
 }
 

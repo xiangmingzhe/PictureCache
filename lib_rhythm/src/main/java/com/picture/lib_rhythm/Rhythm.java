@@ -12,6 +12,7 @@ import com.picture.lib_rhythm.cache.LocalCache;
 import com.picture.lib_rhythm.cache.LruCache;
 import com.picture.lib_rhythm.cache.NetCache;
 import com.picture.lib_rhythm.utils.Utils;
+import com.picture.lib_rhythm.widgets.gif.GifImageView;
 
 /**
  * Time:2019/11/7
@@ -31,7 +32,7 @@ public class Rhythm {
     private int errorResId;
     private Drawable placeholderDrawable;
     private Drawable errorDrawable;
-
+    private boolean gifEnable;
     public Rhythm(Context context, Cache lruCache, LocalCache localCache, NetCache netCache) {
         this.context = context;
         this.lruCache = lruCache;
@@ -52,7 +53,7 @@ public class Rhythm {
 
 
     /**
-     * 加载的网页
+     * 加载的图片地址
      *
      * @param path
      * @return
@@ -65,7 +66,20 @@ public class Rhythm {
 
         return this;
     }
+    /**
+     * 加载的资源文件
+     *
+     * @param resId
+     * @return
+     */
+    public Rhythm load(int resId) {
+        if (resId==0) {
+            throw new NullPointerException("resId Can not be 0");
+        }
+        this.url = String.valueOf(resId);
 
+        return this;
+    }
     /**
      * 目标控件
      *
@@ -82,9 +96,16 @@ public class Rhythm {
         if (target == null) {
             throw new IllegalArgumentException("Target Can not be empty.");
         }
-        setOccupationMap();
-        netCache.error(getErrorDrawable());
-        netCache.loadBitmap(imageView, url);
+        if(gifEnable){
+            GifImageView imageView=(GifImageView)target;
+            imageView.isAutoPlay(gifEnable);
+        }
+
+        RequestCreator.Builder builder=new RequestCreator.Builder();
+        builder.with(context).addLocalCache(localCache).addLruCache(lruCache).addNetCache(netCache)
+                .error(errorResId).error(errorDrawable).placeholder(placeholderResId).placeholder(placeholderResId)
+                .createTask(url,target);
+        RequestCreator.getInstance().createTask(builder);
     }
 
     /**
@@ -115,7 +136,11 @@ public class Rhythm {
         return this;
     }
 
-
+    /**
+     * 通过资源ID设置错误视图
+     * @param errorResId
+     * @return
+     */
     public Rhythm error(int errorResId) {
         if (errorResId == 0) {
             throw new IllegalArgumentException("Error image resource invalid.");
@@ -126,6 +151,11 @@ public class Rhythm {
         this.errorResId = errorResId;
         return this;
     }
+    /**
+     * 通过errorDrawable设置错误视图
+     * @param errorDrawable
+     * @return
+     */
     public Rhythm error(Drawable errorDrawable) {
         if (errorDrawable == null) {
             throw new IllegalArgumentException("Error image may not be null.");
@@ -138,35 +168,20 @@ public class Rhythm {
     }
 
     /**
-     * 将占位图设置到目标控件
-     */
-    private void setOccupationMap() {
-        imageView.setImageDrawable(getPlaceholderDrawable());
-    }
-
-    /**
-     *
+     * 是否开启gif
+     * @param enable
      * @return
      */
-    private Drawable getPlaceholderDrawable() {
-        if (placeholderResId != 0) {
-            return context.getResources().getDrawable(placeholderResId);
-        } else {
-            return placeholderDrawable;
-        }
+    public Rhythm openGif(boolean enable){
+        this.gifEnable=enable;
+        return this;
     }
 
-    /**
-     *
-     * @return
-     */
-    private Drawable getErrorDrawable() {
-        if (errorResId != 0) {
-            return context.getResources().getDrawable(errorResId);
-        } else {
-            return errorDrawable;
-        }
-    }
+
+
+
+
+
 
     public static class Builder {
         public Context context;
