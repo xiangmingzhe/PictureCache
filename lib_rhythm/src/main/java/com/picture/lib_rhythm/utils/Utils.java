@@ -46,7 +46,7 @@ public class Utils {
         if(result<0){
             throw new IllegalStateException("bitmap size < 0");
         }
-        return result*4;
+        return result;
     }
     @SuppressWarnings("unchecked")
     static <T> T getService(Context context, String service) {
@@ -76,8 +76,7 @@ public class Utils {
         File datapath = Environment.getDataDirectory();
         StatFs dataFs=new StatFs(datapath.getPath());
         long sizes=(long)dataFs.getFreeBlocks()*(long)dataFs.getBlockSize();
-        long available=sizes/((1024*1024));
-        return available;
+        return sizes;
     }
 
     /**

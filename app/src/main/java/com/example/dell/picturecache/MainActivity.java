@@ -32,24 +32,19 @@ public class MainActivity extends Activity {
         bt_loadimage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int rid=R.drawable.robot;
-                Log.d("资源ID","rid:"+rid);
-                Rhythm.with(MainActivity.this).load("https://uinpay.oss-cn-shenzhen.aliyuncs.com/icon/20190515/caifu.png").openGif(false).error(R.drawable.robot).placeholder(R.drawable.robot).into(imageView);
+                Rhythm.with(MainActivity.this).load("https://pics7.baidu.com/feed/e1fe9925bc315c6019816a380ec27c164854774d.jpeg?token=d21ab74381ca956c4ca28ef5c90e4868&s=30FE7084C273359450A844900300708E").openGif(false).error(R.drawable.robot).placeholder(R.drawable.robot).into(imageView);
             }
         });
         bt_loadimage_id.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int rid=R.drawable.robot;
-                Log.d("资源ID","rid:"+rid);
                 Rhythm.with(MainActivity.this).load(rid).openGif(false).error(R.drawable.robot).placeholder(R.drawable.robot).into(imageView);
             }
         });
         bt_loadimage_local.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int rid=R.drawable.robot;
-                Log.d("资源ID","rid:"+rid);
                 Rhythm.with(MainActivity.this).load("https://uinpay.oss-cn-shenzhen.aliyuncs.com/icon/20190515/caifu.png").openGif(false).error(R.drawable.robot).placeholder(R.drawable.robot).into(imageView);
             }
         });
