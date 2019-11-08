@@ -24,7 +24,7 @@ public class MainActivity extends Activity {
         bt_loadimage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Rhythm.with(MainActivity.this).into(imageView).load("https://uinpay.oss-cn-shenzhen.aliyuncs.com/icon/20190515/caifu.png");
+                Rhythm.with(MainActivity.this).load("https://uinpay.oss-cn-shenzhen.aliyuncs.com/icon/20190515/caiu.png").error(R.drawable.ic_launcher_background).into(imageView);
             }
         });
     }

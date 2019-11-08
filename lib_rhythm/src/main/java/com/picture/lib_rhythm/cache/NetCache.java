@@ -2,6 +2,7 @@ package com.picture.lib_rhythm.cache;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
@@ -21,12 +22,12 @@ import java.net.URL;
 public class NetCache {
     private LruCache lruCache;
     private LocalCache localCache;
-    private String TAG="NetCache";
+    private static final String TAG="NetCache";
+    private Drawable errorDrawable;
     public NetCache(Cache lruCache,LocalCache localCache){
         this.lruCache=(LruCache) lruCache;
         this.localCache=localCache;
     }
-
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -34,9 +35,31 @@ public class NetCache {
             ImageView imageView = (ImageView) objects[0];
             String mUrl = (String) objects[1];
             imageView.setTag(mUrl);
+            if(errorDrawable!=null){
+                boolean isSuccess=(boolean) objects[2];
+                if(!isSuccess){
+                    imageView.setImageDrawable(errorDrawable);
+                }
+            }
+
         }
     };
 
+    /**
+     * 错误视图
+     * @param errorDrawable
+     * @return
+     */
+    public NetCache error(Drawable errorDrawable){
+        this.errorDrawable=errorDrawable;
+        return this;
+    }
+
+    /**
+     * 加载图片
+     * @param iv
+     * @param url
+     */
     public void loadBitmap(final ImageView iv,final String url){
         if(iv==null||TextUtils.isEmpty(url)){
             throw new NullPointerException("ImageView Can not be empty || url Can not be empty");
@@ -88,12 +111,11 @@ public class NetCache {
             ivPicture = (ImageView) params[0];
             url = (String) params[1];
             message = handler.obtainMessage();
-            objects = new Object[]{ivPicture, url
+            objects = new Object[]{ivPicture, url,true
             };
             message.obj = objects;
             handler.sendMessage(message);
-
-            return downloadBitmap(url);
+            return downloadBitmap(url,ivPicture,objects,message);
         }
 
         /**
@@ -118,6 +140,14 @@ public class NetCache {
                     Log.d(TAG,"从网络缓存读取图片啦");
 
                 }
+            }else{
+                Log.d(TAG,"图片网络加载失败");
+                message = handler.obtainMessage();
+                objects = new Object[]{ivPicture, url,false
+                };
+                message.obj = objects;
+                handler.sendMessage(message);
+
             }
         }
     }
@@ -128,12 +158,11 @@ public class NetCache {
      * @param url
      * @return
      */
-    private Bitmap downloadBitmap(String url) {
+    private Bitmap downloadBitmap(String url,ImageView iv,Object[]objects,Message message) {
 
         HttpURLConnection conn = null;
         try {
             conn = (HttpURLConnection) new URL(url).openConnection();
-
             conn.setConnectTimeout(5000);
             conn.setReadTimeout(5000);
             conn.setRequestMethod("GET");
@@ -153,7 +182,14 @@ public class NetCache {
             }
 
         } catch (Exception e) {
+            Log.d(TAG,"图片加载失败,准备加载错误视图");
+            message = handler.obtainMessage();
+            objects = new Object[]{iv, url,false
+            };
+            message.obj = objects;
+            handler.sendMessage(message);
             e.printStackTrace();
+
         } finally {
             if (conn != null) {
                 conn.disconnect();
