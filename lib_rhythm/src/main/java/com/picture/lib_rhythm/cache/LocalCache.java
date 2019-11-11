@@ -81,9 +81,6 @@ public class LocalCache {
         if(TextUtils.isEmpty(url)||bitmap==null){
             throw new NullPointerException("url Can not be empty || bitmap Can not be empty");
         }
-        Log.d("setBitmapToLocal","Utils.calculateSdCardCacheSize():"+Utils.calculateSdCardCacheSize());
-        Log.d("setBitmapToLocal","Utils.getBitmapKB(bitmap):"+Utils.getBitmapKB(bitmap));
-
         if(Utils.calculateSdCardCacheSize()<Utils.getBitmapKB(bitmap)){
             throw new IllegalArgumentException("sdcard Insufficient space left");
         }

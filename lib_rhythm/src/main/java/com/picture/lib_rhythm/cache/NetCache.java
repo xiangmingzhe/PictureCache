@@ -12,6 +12,7 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.picture.lib_rhythm.R;
+import com.picture.lib_rhythm.utils.BitmapUtils;
 import com.picture.lib_rhythm.widgets.gif.GifImageView;
 
 import java.io.InputStream;
@@ -29,6 +30,7 @@ public class NetCache {
     private static final String TAG="NetCache";
     private Drawable errorDrawable;
     private Context mContext;
+    private float radius=0f;
     public NetCache(Cache lruCache,LocalCache localCache){
         this.lruCache=(LruCache) lruCache;
         this.localCache=localCache;
@@ -53,7 +55,26 @@ public class NetCache {
         this.errorDrawable=errorDrawable;
         return this;
     }
+    /**
+     * 设置圆角
+     * @param radius 弧度
+     * @return
+     */
+    public NetCache transform(float radius) {
+        this.radius=radius;
+        return this;
+    }
 
+    /**
+     * 是否需要设置圆角
+     * @return
+     */
+    private boolean isRoundCorner(){
+        if(radius!=0f){
+            return true;
+        }
+        return false;
+    }
     /**
      * 设置错误视图
      * @param objects
@@ -63,7 +84,12 @@ public class NetCache {
         if(errorDrawable!=null){
             boolean isSuccess=(boolean) objects[2];
             if(!isSuccess){
-                imageView.setImageDrawable(errorDrawable);
+                if(isRoundCorner()){
+                    Bitmap bitmap=BitmapUtils.toRoundCorner(errorDrawable,radius);
+                    imageView.setImageBitmap(bitmap);
+                }else{
+                    imageView.setImageDrawable(errorDrawable);
+                }
             }
         }
     }
@@ -77,13 +103,17 @@ public class NetCache {
             throw new NullPointerException("ImageView Can not be empty || url Can not be empty || context Can not be empty");
         }
         this.mContext=context;
-        Log.d(TAG,"下载的地址:"+url);
         new Handler().post(new Runnable() {
             @Override
             public void run() {
                 Bitmap bitmap=loadBitmap(url);
+
                 if(bitmap!=null){
-                    iv.setImageBitmap(bitmap);
+                    if(isRoundCorner()){
+                        iv.setImageBitmap(BitmapUtils.toRoundCorner(bitmap,radius));
+                    }else{
+                        iv.setImageBitmap(bitmap);
+                    }
                 }else{
                     new BitmapTask().execute(iv, url);// 启动AsyncTask,
                 }
@@ -152,11 +182,13 @@ public class NetCache {
             if (result != null) {
                 String bindUrl = (String) ivPicture.getTag();
                 if (url.equals(bindUrl)) {// 确保图片设定给了正确的imageview
+                    if(isRoundCorner()){
+                        result= BitmapUtils.toRoundCorner(result,radius);
+                    }
                     ivPicture.setImageBitmap(result);
                     localCache.setBitmapToLocal(url, result);// 将图片保存在本地
                     lruCache.set(url, result);// 将图片保存在内存
                     Log.d(TAG,"从网络缓存读取图片啦");
-
                 }
             }else{
                 Log.d(TAG,"图片网络加载失败");
@@ -216,5 +248,7 @@ public class NetCache {
 
         return null;
     }
+
+
 }
 

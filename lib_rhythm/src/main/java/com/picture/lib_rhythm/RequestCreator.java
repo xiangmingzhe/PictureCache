@@ -1,6 +1,8 @@
 package com.picture.lib_rhythm;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.util.Log;
@@ -9,6 +11,7 @@ import android.widget.ImageView;
 import com.picture.lib_rhythm.cache.Cache;
 import com.picture.lib_rhythm.cache.LocalCache;
 import com.picture.lib_rhythm.cache.NetCache;
+import com.picture.lib_rhythm.utils.BitmapUtils;
 import com.picture.lib_rhythm.utils.Utils;
 
 import static com.picture.lib_rhythm.TypeEnum.HTTP;
@@ -46,13 +49,15 @@ public class RequestCreator {
             Log.d(TAG, "tag-n debug 接收到的类型为:" + type.name());
             switch (type.name()) {
                 case "HTTP":
-                    mBuilder.netCache.error(getErrorDrawable()).loadBitmap(mBuilder.imageView, mBuilder.url, mBuilder.context);
+                    mBuilder.netCache.transform(mBuilder.radius).error(getErrorDrawable()).loadBitmap(mBuilder.imageView, mBuilder.url, mBuilder.context);
                     break;
                 case "RESOURCES":
                     new Handler().post(new Runnable() {
                         @Override
                         public void run() {
-                            mBuilder.imageView.setImageResource(Integer.parseInt(mBuilder.url));
+                            Bitmap bitmap=getBitmap(Integer.parseInt(mBuilder.url));
+                            saveMemory(mBuilder.url,bitmap);
+                            setBitmap(bitmap);
                         }
                     });
                     break;
@@ -60,7 +65,9 @@ public class RequestCreator {
                     new Handler().post(new Runnable() {
                         @Override
                         public void run() {
-                            mBuilder.imageView.setImageBitmap(mBuilder.localCache.getBitmapFromLocal(mBuilder.url));
+                            Bitmap bitmap=getBitmap(mBuilder.url);
+                            saveMemory(mBuilder.url,bitmap);
+                            setBitmap(bitmap);
                         }
                     });
                     break;
@@ -96,6 +103,72 @@ public class RequestCreator {
             return mBuilder.placeholderDrawable;
         }
     }
+
+    /**
+     * 将bitmap保存至内存及本地
+     * @param url
+     * @param bitmap
+     */
+    private void saveMemory(String url, Bitmap bitmap){
+        if(mBuilder.localCache.getBitmapFromLocal(url)==null){
+            mBuilder.localCache.setBitmapToLocal(url,bitmap);
+        }
+        if(mBuilder.lruCache.get(url)==null){
+            mBuilder.lruCache.set(url,bitmap);
+        }
+    }
+
+    /**
+     * 获取bitmap
+     * @param url
+     * @return
+     */
+    private Bitmap getBitmap(String url){
+        if(mBuilder.lruCache.get(url)!=null){
+            return mBuilder.lruCache.get(url);
+        }
+        if(mBuilder.localCache.getBitmapFromLocal(url)!=null){
+            return mBuilder.localCache.getBitmapFromLocal(url);
+        }
+        return null;
+    }
+
+    /**
+     * 根据资源ID 获取bitmap
+     * @param resId
+     * @return
+     */
+    private Bitmap getBitmap(int resId){
+        if(mBuilder.lruCache.get(String.valueOf(resId))!=null){
+            return mBuilder.lruCache.get(String.valueOf(resId));
+        }
+        if(mBuilder.localCache.getBitmapFromLocal(String.valueOf(resId))!=null){
+            return mBuilder.localCache.getBitmapFromLocal(String.valueOf(resId));
+        }
+        return BitmapFactory.decodeResource(mBuilder.context.getResources(),resId);
+    }
+
+    /**
+     *
+     * @param bitmap
+     */
+    private void setBitmap(Bitmap bitmap){
+        if(mBuilder.imageView!=null){
+            if(mBuilder.radius!=0f){
+                bitmap= BitmapUtils.toRoundCorner(bitmap,mBuilder.radius);
+            }
+            if(mBuilder.style!=null){
+                switch (mBuilder.style.name()){
+                    case "CIRCLE":
+                        bitmap=BitmapUtils.createCircleImage(bitmap);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            mBuilder.imageView.setImageBitmap(bitmap);
+        }
+    }
     public static class Builder {
         private Context context;
         private Cache lruCache;
@@ -107,6 +180,8 @@ public class RequestCreator {
         private Drawable errorDrawable;
         private int placeholderResId;
         private Drawable placeholderDrawable;
+        private float radius;
+        private Enum style;
         public Builder addLruCache(Cache lruCache) {
             this.lruCache = lruCache;
             return this;
@@ -166,8 +241,25 @@ public class RequestCreator {
             this.placeholderDrawable = placeholderDrawable;
             return this;
         }
+        /**
+         * 设置圆角
+         * @param radius 弧度
+         * @return
+         */
+        public Builder transform(float radius) {
+            this.radius=radius;
+            return this;
+        }
 
-
+        /**
+         * 图片风格
+         * @param style
+         * @return
+         */
+        public  Builder style(Enum style) {
+            this.style=style;
+            return this;
+        }
         public Builder createTask(String url, ImageView image) {
             this.url = url;
             this.imageView = image;

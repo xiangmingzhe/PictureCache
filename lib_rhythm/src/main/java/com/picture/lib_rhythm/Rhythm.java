@@ -33,6 +33,8 @@ public class Rhythm {
     private Drawable placeholderDrawable;
     private Drawable errorDrawable;
     private boolean gifEnable;
+    private float radius=0f;
+    private Enum style;
     public Rhythm(Context context, Cache lruCache, LocalCache localCache, NetCache netCache) {
         this.context = context;
         this.lruCache = lruCache;
@@ -102,8 +104,16 @@ public class Rhythm {
         }
 
         RequestCreator.Builder builder=new RequestCreator.Builder();
-        builder.with(context).addLocalCache(localCache).addLruCache(lruCache).addNetCache(netCache)
-                .error(errorResId).error(errorDrawable).placeholder(placeholderResId).placeholder(placeholderResId)
+        builder.with(context)
+                .addLocalCache(localCache)
+                .addLruCache(lruCache)
+                .addNetCache(netCache)
+                .error(errorResId).
+                error(errorDrawable).
+                placeholder(placeholderResId).
+                placeholder(placeholderResId).
+                transform(radius).
+                style(style)
                 .createTask(url,target);
         RequestCreator.getInstance().createTask(builder);
     }
@@ -177,20 +187,32 @@ public class Rhythm {
         return this;
     }
 
+    /**
+     * 设置圆角
+     * @param radius 弧度
+     * @return
+     */
+    public Rhythm transform(float radius) {
+        this.radius=radius;
+        return this;
+    }
 
-
-
-
-
+    /**
+     * 图片风格  圆形/椭圆
+     * @param style
+     * @return
+     */
+    public  Rhythm style(Enum style) {
+        this.style=style;
+        return this;
+    }
 
     public static class Builder {
         public Context context;
         public Cache lruCache;
         public LocalCache localCache;
         public NetCache netCache;
-        public String url;
         public String uniqueName;
-        public ImageView imageView;
 
         public Builder(Context context) {
             if (context == null) {

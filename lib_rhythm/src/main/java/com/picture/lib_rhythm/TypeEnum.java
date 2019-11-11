@@ -6,5 +6,24 @@ package com.picture.lib_rhythm;
  * Description:
  */
 public enum  TypeEnum {
-    HTTP,RESOURCES,LOCAL
+    /**
+     * http请求
+     */
+    HTTP,
+    /**
+     * 资源ID
+     */
+    RESOURCES,
+    /**
+     * 本地文件
+     */
+    LOCAL,
+    /**
+     * 圆形
+     */
+    CIRCLE,
+    /**
+     *
+     */
+    OVAL,
 }
