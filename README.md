@@ -11,3 +11,11 @@ Rhythm.with(context).load(url).placeholder(R.drawable.xx).into(imageView);
  Rhythm.with(context).load(url).openGif(false).into(imageView);
 # 设置成圆形图片
  Rhythm.with(context).load(url).style(TypeEnum.CIRCLE).into(imageView);
+# 设置圆形or圆角图片边框
+ Rhythm.with(context).load(url).style(TypeEnum.CIRCLE).boarder(2).into(imageView);
+ 
+ Rhythm.with(context).load(url).transform(10.0f).boarder(2).into(imageView);
+
+ 
+
+ 
