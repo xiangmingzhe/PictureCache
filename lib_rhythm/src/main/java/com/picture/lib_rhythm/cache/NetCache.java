@@ -85,7 +85,7 @@ public class NetCache {
             boolean isSuccess=(boolean) objects[2];
             if(!isSuccess){
                 if(isRoundCorner()){
-                    Bitmap bitmap=BitmapUtils.toRoundCorner(errorDrawable,radius);
+                    Bitmap bitmap=BitmapUtils.toRoundCorner(errorDrawable,radius,0);
                     imageView.setImageBitmap(bitmap);
                 }else{
                     imageView.setImageDrawable(errorDrawable);
@@ -107,13 +107,8 @@ public class NetCache {
             @Override
             public void run() {
                 Bitmap bitmap=loadBitmap(url);
-
                 if(bitmap!=null){
-                    if(isRoundCorner()){
-                        iv.setImageBitmap(BitmapUtils.toRoundCorner(bitmap,radius));
-                    }else{
-                        iv.setImageBitmap(bitmap);
-                    }
+                    sendBitmap(bitmap);
                 }else{
                     new BitmapTask().execute(iv, url);// 启动AsyncTask,
                 }
@@ -182,10 +177,11 @@ public class NetCache {
             if (result != null) {
                 String bindUrl = (String) ivPicture.getTag();
                 if (url.equals(bindUrl)) {// 确保图片设定给了正确的imageview
-                    if(isRoundCorner()){
-                        result= BitmapUtils.toRoundCorner(result,radius);
-                    }
-                    ivPicture.setImageBitmap(result);
+//                    if(isRoundCorner()){
+//                        result= BitmapUtils.toRoundCorner(result,radius);
+//                    }
+//                    ivPicture.setImageBitmap(result);
+                    sendBitmap(result);
                     localCache.setBitmapToLocal(url, result);// 将图片保存在本地
                     lruCache.set(url, result);// 将图片保存在内存
                     Log.d(TAG,"从网络缓存读取图片啦");
@@ -249,6 +245,24 @@ public class NetCache {
         return null;
     }
 
+    /**
+     * 发送一个bitmap给上游
+     * 下一个版本要替换成自定义rxandroid来实现。
+     *
+     */
+    private void sendBitmap(Bitmap bitmap){
+        if(onLoadSuccessListener!=null){
+            onLoadSuccessListener.loadBitmapSuccess(bitmap);
+        }
+    }
+    public OnLoadSuccessListener onLoadSuccessListener;
+    public NetCache setOnLoadSuccessListener(OnLoadSuccessListener onLoadSuccessListener) {
+        this.onLoadSuccessListener = onLoadSuccessListener;
+        return this;
+    }
 
+    public interface OnLoadSuccessListener{
+        void loadBitmapSuccess(Bitmap bitmap);
+    }
 }
 

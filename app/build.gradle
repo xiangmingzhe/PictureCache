@@ -26,4 +26,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation project(':lib_rhythm')
+    implementation "com.android.support:recyclerview-v7:28+"
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.22'
 }

@@ -2,10 +2,10 @@ package com.picture.lib_rhythm;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.telecom.Call;
 import android.text.TextUtils;
 import android.widget.ImageView;
 
+import com.picture.lib_rhythm.bean.TagInfo;
 import com.picture.lib_rhythm.cache.Cache;
 import com.picture.lib_rhythm.cache.Callback;
 import com.picture.lib_rhythm.cache.LocalCache;
@@ -13,6 +13,9 @@ import com.picture.lib_rhythm.cache.LruCache;
 import com.picture.lib_rhythm.cache.NetCache;
 import com.picture.lib_rhythm.utils.Utils;
 import com.picture.lib_rhythm.widgets.gif.GifImageView;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Time:2019/11/7
@@ -35,14 +38,24 @@ public class Rhythm {
     private boolean gifEnable;
     private float radius=0f;
     private Enum style;
+    private int boarder=0;
+    private RequestCreator.Builder builder;
+    public Map<String,TagInfo>tagInfo;
     public Rhythm(Context context, Cache lruCache, LocalCache localCache, NetCache netCache) {
         this.context = context;
         this.lruCache = lruCache;
         this.localCache = localCache;
         this.netCache = netCache;
     }
-
+    public Rhythm(Context context, Cache lruCache, LocalCache localCache, NetCache netCache,Map<String,TagInfo>tagInfo) {
+        this.context = context;
+        this.lruCache = lruCache;
+        this.localCache = localCache;
+        this.netCache = netCache;
+        this.tagInfo=tagInfo;
+    }
     public static Rhythm with(Context context) {
+
         if (singleton == null) {
             synchronized (Rhythm.class) {
                 if (singleton == null) {
@@ -102,22 +115,38 @@ public class Rhythm {
             GifImageView imageView=(GifImageView)target;
             imageView.isAutoPlay(gifEnable);
         }
-
-        RequestCreator.Builder builder=new RequestCreator.Builder();
+        if(builder!=null){
+            RequestCreator.getInstance().cleanAllAttr();
+            builder=null;
+        }
+        bindTag();
+        builder=new RequestCreator.Builder();
         builder.with(context)
                 .addLocalCache(localCache)
                 .addLruCache(lruCache)
                 .addNetCache(netCache)
-                .error(errorResId).
-                error(errorDrawable).
-                placeholder(placeholderResId).
-                placeholder(placeholderResId).
-                transform(radius).
-                style(style)
+                .error(errorResId)
+                .error(errorDrawable)
+                .placeholder(placeholderResId)
+                .placeholder(placeholderResId)
+                .transform(radius)
+                .style(style)
+                .boarder(boarder)
                 .createTask(url,target);
         RequestCreator.getInstance().createTask(builder);
+        cleanAttr();
+
     }
 
+    /**
+     * 为每个目标控件绑定tag
+     */
+    private void bindTag(){
+        if(imageView!=null&&!TextUtils.isEmpty(url)){
+            imageView.setTag(url);
+            tagInfo.put(url,new TagInfo(url,imageView));
+        }
+    }
     /**
      * 通过资源ID设置占位图
      *
@@ -207,13 +236,37 @@ public class Rhythm {
         return this;
     }
 
+    /**
+     * 设置边框  圆角or圆形
+     * @param boarder
+     * @return
+     */
+    public Rhythm boarder(int boarder){
+        this.boarder=boarder;
+        return this;
+    }
+    /**
+     * 清除本身所有属性
+     */
+    public Rhythm cleanAttr(){
+        this.url=null;
+        this.style=null;
+        this.imageView=null;
+        this.errorResId=0;
+        this.errorDrawable=null;
+        this.placeholderResId=0;
+        this.placeholderDrawable=null;
+        this.radius=0f;
+        this.boarder=0;
+        return this;
+    }
     public static class Builder {
         public Context context;
         public Cache lruCache;
         public LocalCache localCache;
         public NetCache netCache;
         public String uniqueName;
-
+        public Map<String,TagInfo>tagInfo;
         public Builder(Context context) {
             if (context == null) {
                 throw new IllegalArgumentException("Context cannot be empty");
@@ -236,7 +289,10 @@ public class Rhythm {
             if (netCache == null) {
                 netCache = new NetCache(lruCache, localCache);
             }
-            return new Rhythm(context, lruCache, localCache, netCache);
+            if(tagInfo==null){
+                tagInfo=new HashMap<>();
+            }
+            return new Rhythm(context, lruCache, localCache, netCache,tagInfo);
         }
     }
 }

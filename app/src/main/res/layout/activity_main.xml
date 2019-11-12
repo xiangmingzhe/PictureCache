@@ -11,14 +11,37 @@
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
        android:id="@+id/image"
+       android:layout_gravity="center_horizontal"
        />
-    <Button
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="加载网络图片"
-        android:textColor="#000000"
-        android:id="@+id/bt_loadimage"
-        />
+        android:orientation="horizontal"
+        >
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="加载网络图片(圆角)"
+            android:textColor="#000000"
+            android:id="@+id/bt_loadimage"
+            />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="加载网络图片(圆形)"
+            android:textColor="#000000"
+            android:id="@+id/bt_loadimage_circular"
+            />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="加载网络图片列表"
+            android:textColor="#000000"
+            android:id="@+id/bt_loadimage_list"
+            />
+    </LinearLayout>
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

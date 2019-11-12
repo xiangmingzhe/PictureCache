@@ -8,11 +8,14 @@ import android.os.Handler;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.picture.lib_rhythm.bean.TagInfo;
 import com.picture.lib_rhythm.cache.Cache;
 import com.picture.lib_rhythm.cache.LocalCache;
 import com.picture.lib_rhythm.cache.NetCache;
 import com.picture.lib_rhythm.utils.BitmapUtils;
 import com.picture.lib_rhythm.utils.Utils;
+
+import java.util.Map;
 
 import static com.picture.lib_rhythm.TypeEnum.HTTP;
 
@@ -42,6 +45,7 @@ public class RequestCreator {
      * @param builder
      */
     public void createTask(Builder builder) {
+//        cleanAllAttr();
         this.mBuilder = builder;
         if (mBuilder != null) {
             setOccupationMap();
@@ -49,7 +53,14 @@ public class RequestCreator {
             Log.d(TAG, "tag-n debug 接收到的类型为:" + type.name());
             switch (type.name()) {
                 case "HTTP":
-                    mBuilder.netCache.transform(mBuilder.radius).error(getErrorDrawable()).loadBitmap(mBuilder.imageView, mBuilder.url, mBuilder.context);
+                    mBuilder.netCache.transform(mBuilder.radius).error(getErrorDrawable())
+                            .setOnLoadSuccessListener(new NetCache.OnLoadSuccessListener() {
+                                @Override
+                                public void loadBitmapSuccess(Bitmap bitmap) {
+                                    setBitmapInto(bitmap);
+                                }
+                            })
+                            .loadBitmap(mBuilder.imageView, mBuilder.url, mBuilder.context);
                     break;
                 case "RESOURCES":
                     new Handler().post(new Runnable() {
@@ -57,7 +68,7 @@ public class RequestCreator {
                         public void run() {
                             Bitmap bitmap=getBitmap(Integer.parseInt(mBuilder.url));
                             saveMemory(mBuilder.url,bitmap);
-                            setBitmap(bitmap);
+                            setBitmapInto(bitmap);
                         }
                     });
                     break;
@@ -67,7 +78,7 @@ public class RequestCreator {
                         public void run() {
                             Bitmap bitmap=getBitmap(mBuilder.url);
                             saveMemory(mBuilder.url,bitmap);
-                            setBitmap(bitmap);
+                            setBitmapInto(bitmap);
                         }
                     });
                     break;
@@ -149,24 +160,51 @@ public class RequestCreator {
     }
 
     /**
-     *
+     * 将 bitmap设置给目标控件
      * @param bitmap
      */
-    private void setBitmap(Bitmap bitmap){
+    private void setBitmapInto(Bitmap bitmap){
         if(mBuilder.imageView!=null){
-            if(mBuilder.radius!=0f){
-                bitmap= BitmapUtils.toRoundCorner(bitmap,mBuilder.radius);
+            if(mBuilder.radius!=0f){//如果设置了圆角
+                bitmap= BitmapUtils.toRoundCorner(bitmap,mBuilder.radius,mBuilder.boarder);
             }
-            if(mBuilder.style!=null){
+            if(mBuilder.style!=null){ //如果设置了风格
                 switch (mBuilder.style.name()){
                     case "CIRCLE":
-                        bitmap=BitmapUtils.createCircleImage(bitmap);
+                        bitmap=BitmapUtils.createCircleImage(bitmap,mBuilder.boarder);
                         break;
                     default:
                         break;
                 }
             }
-            mBuilder.imageView.setImageBitmap(bitmap);
+            Log.d(TAG,"tag-n deubg mBuilder.url:"+isViewTag()+"---------->"+mBuilder.url);
+//                mBuilder.imageView.setImageBitmap(bitmap);
+            Map<String,TagInfo>tagInfo=Rhythm.singleton.tagInfo;
+            for (Map.Entry<String, TagInfo> m : tagInfo.entrySet()) {
+                String  key= m.getKey();
+                TagInfo mTagInfo=m.getValue();
+                System.out.println("----->>>>>>"+mTagInfo.getInto().getTag());
+                if(key.equals(mBuilder.url)&&mBuilder.url.equals(mTagInfo.getInto().getTag())){
+                    mTagInfo.getInto().setImageBitmap(bitmap);
+                }
+            }
+        }
+    }
+
+    /**
+     * 判断目标控件是否跟url相匹配
+     * @return
+     */
+    private boolean isViewTag(){
+        return mBuilder.imageView.getTag().equals(mBuilder.url);
+    }
+    /**
+     * 清除所有属性
+     */
+    public void cleanAllAttr(){
+        if(mBuilder!=null){
+            mBuilder.cleanAttr();
+            mBuilder=null;
         }
     }
     public static class Builder {
@@ -182,6 +220,7 @@ public class RequestCreator {
         private Drawable placeholderDrawable;
         private float radius;
         private Enum style;
+        private int boarder;
         public Builder addLruCache(Cache lruCache) {
             this.lruCache = lruCache;
             return this;
@@ -260,10 +299,36 @@ public class RequestCreator {
             this.style=style;
             return this;
         }
+        /**
+         * 设置边框  圆角or圆形
+         * @param boarder
+         * @return
+         */
+        public Builder boarder(int boarder){
+            this.boarder=boarder;
+            return this;
+        }
+
         public Builder createTask(String url, ImageView image) {
             this.url = url;
             this.imageView = image;
             return this;
+        }
+
+        /**
+         * 清除本身所有属性
+         */
+        public void cleanAttr(){
+            this.url=null;
+            this.style=null;
+            this.context=null;
+            this.imageView=null;
+            this.errorResId=0;
+            this.errorDrawable=null;
+            this.placeholderResId=0;
+            this.placeholderDrawable=null;
+            this.radius=0f;
+            this.boarder=0;
         }
     }
 }
