@@ -15,6 +15,9 @@ Rhythm.with(context).load(url).placeholder(R.drawable.xx).into(imageView);
  Rhythm.with(context).load(url).style(TypeEnum.CIRCLE).boarder(2).into(imageView);
  
  Rhythm.with(context).load(url).transform(10.0f).boarder(2).into(imageView);
+# 增加图片渐变
+
+# 图片懒加载
 
  
 
