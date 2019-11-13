@@ -19,6 +19,10 @@ Rhythm.with(context).load(url).placeholder(R.drawable.xx).into(imageView);
 
 # 图片懒加载
 
+# 取消单个加载
+
+# 取消所有加载
+
  
 
  
