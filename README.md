@@ -23,6 +23,8 @@ Rhythm.with(context).load(url).placeholder(R.drawable.xx).into(imageView);
 
 # 取消所有加载
 
+# 加载图片模糊效果
+
  
 
  
