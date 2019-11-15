@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -14,10 +15,11 @@ import com.picture.lib_rhythm.cache.LocalCache;
 import com.picture.lib_rhythm.cache.NetCache;
 import com.picture.lib_rhythm.utils.BitmapUtils;
 import com.picture.lib_rhythm.utils.Utils;
+import com.picture.lib_rhythm.widgets.vague.VagueView;
 
+import java.util.HashMap;
 import java.util.Map;
 
-import static com.picture.lib_rhythm.TypeEnum.HTTP;
 
 /**
  * Time:2019/11/8
@@ -28,6 +30,7 @@ public class RequestCreator {
     static volatile RequestCreator singleton = null;
     private Builder mBuilder;
     private static String TAG = "RequestCreator";
+    public Map<String,NetCache.BitmapTask>taskMap;
 
     public static RequestCreator getInstance() {
         if (singleton == null) {
@@ -39,13 +42,15 @@ public class RequestCreator {
         }
         return singleton;
     }
-
+    public RequestCreator(){
+        taskMap=new HashMap<>();
+    }
     /**
      * 创建任务
      * @param builder
      */
     public void createTask(Builder builder) {
-//        cleanAllAttr();
+
         this.mBuilder = builder;
         if (mBuilder != null) {
             setOccupationMap();
@@ -158,13 +163,44 @@ public class RequestCreator {
         }
         return BitmapFactory.decodeResource(mBuilder.context.getResources(),resId);
     }
-
     /**
      * 将 bitmap设置给目标控件
      * @param bitmap
      */
     private void setBitmapInto(Bitmap bitmap){
-        if(mBuilder.imageView!=null){
+        setBitmapInto(bitmap,true);
+    }
+    /**
+     * 将 bitmap设置给目标控件
+     * @param bitmap
+     */
+    private void setBitmapInto(Bitmap bitmap,boolean isTag){
+        synchronized (this){
+            Map<String,TagInfo>tagInfo=Rhythm.singleton.tagInfo;
+            for (Map.Entry<String, TagInfo> m : tagInfo.entrySet()) {
+                String  key= m.getKey();
+                TagInfo mTagInfo=m.getValue();
+                if(!mTagInfo.isTag()){
+                    ImageView imageView=mTagInfo.getInto();
+                    imageView.setImageBitmap(getBitmapFromStyle(bitmap));
+                    mTagInfo.setTag(true);
+                    Rhythm.singleton.tagInfo.put(mTagInfo.getUrl(),mTagInfo);
+                    VagueView.with(mBuilder.context).into(imageView).targetResources(getBitmapFromStyle(bitmap)).buildVagueView();
+                    break;
+                }
+
+            }
+
+        }
+
+    }
+
+    /**
+     *   返回不同风格的bitmap
+     * @return
+     */
+    private Bitmap getBitmapFromStyle(Bitmap bitmap){
+        if(bitmap!=null){
             if(mBuilder.radius!=0f){//如果设置了圆角
                 bitmap= BitmapUtils.toRoundCorner(bitmap,mBuilder.radius,mBuilder.boarder);
             }
@@ -177,20 +213,9 @@ public class RequestCreator {
                         break;
                 }
             }
-            Log.d(TAG,"tag-n deubg mBuilder.url:"+isViewTag()+"---------->"+mBuilder.url);
-//                mBuilder.imageView.setImageBitmap(bitmap);
-            Map<String,TagInfo>tagInfo=Rhythm.singleton.tagInfo;
-            for (Map.Entry<String, TagInfo> m : tagInfo.entrySet()) {
-                String  key= m.getKey();
-                TagInfo mTagInfo=m.getValue();
-                System.out.println("----->>>>>>"+mTagInfo.getInto().getTag());
-                if(key.equals(mBuilder.url)&&mBuilder.url.equals(mTagInfo.getInto().getTag())){
-                    mTagInfo.getInto().setImageBitmap(bitmap);
-                }
-            }
         }
+        return  bitmap;
     }
-
     /**
      * 判断目标控件是否跟url相匹配
      * @return
@@ -207,7 +232,11 @@ public class RequestCreator {
             mBuilder=null;
         }
     }
+
+
     public static class Builder {
+        private Map<String,TagInfo>tagInfo=new HashMap<>();
+
         private Context context;
         private Cache lruCache;
         private LocalCache localCache;
@@ -312,9 +341,18 @@ public class RequestCreator {
         public Builder createTask(String url, ImageView image) {
             this.url = url;
             this.imageView = image;
+            bindTag();
             return this;
         }
-
+        /**
+         * 为每个目标控件绑定tag
+         */
+        private void bindTag(){
+            if(imageView!=null&&!TextUtils.isEmpty(url)){
+                imageView.setTag(url);
+                tagInfo.put(url,new TagInfo(url,imageView));
+            }
+        }
         /**
          * 清除本身所有属性
          */

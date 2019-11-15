@@ -56,5 +56,11 @@
         android:textColor="#000000"
         android:id="@+id/bt_loadimage_local"
         />
-
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="加载进度特效图片"
+        android:textColor="#000000"
+        android:id="@+id/bt_loadimage_progress"
+        />
 </LinearLayout>

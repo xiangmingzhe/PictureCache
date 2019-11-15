@@ -16,9 +16,9 @@ import static android.content.Context.ACTIVITY_SERVICE;
 import static android.content.pm.ApplicationInfo.FLAG_LARGE_HEAP;
 import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.HONEYCOMB;
-import static com.picture.lib_rhythm.TypeEnum.HTTP;
-import static com.picture.lib_rhythm.TypeEnum.LOCAL;
-import static com.picture.lib_rhythm.TypeEnum.RESOURCES;
+import static com.picture.lib_rhythm.constant.VisitType.HTTP;
+import static com.picture.lib_rhythm.constant.VisitType.LOCAL;
+import static com.picture.lib_rhythm.constant.VisitType.RESOURCES;
 
 
 /**

@@ -12,10 +12,20 @@ public class TagInfo {
     private String url;
     private ImageView into;
     private Bitmap bitmap;
+    private boolean isTag;
     public TagInfo(String url,ImageView into){
         this.url=url;
         this.into=into;
     }
+
+    public boolean isTag() {
+        return isTag;
+    }
+
+    public void setTag(boolean tag) {
+        isTag = tag;
+    }
+
     public String getUrl() {
         return url;
     }

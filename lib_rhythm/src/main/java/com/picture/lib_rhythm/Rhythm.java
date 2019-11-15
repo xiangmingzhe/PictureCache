@@ -41,6 +41,7 @@ public class Rhythm {
     private int boarder=0;
     private RequestCreator.Builder builder;
     public Map<String,TagInfo>tagInfo;
+
     public Rhythm(Context context, Cache lruCache, LocalCache localCache, NetCache netCache) {
         this.context = context;
         this.lruCache = lruCache;
@@ -244,6 +245,23 @@ public class Rhythm {
     public Rhythm boarder(int boarder){
         this.boarder=boarder;
         return this;
+    }
+
+    /**
+     * 清除所有任务
+     */
+    public void cancleAllTask(){
+        if(netCache!=null){
+            netCache.cancleAllTask();
+        }
+    }
+    /**
+     * 清除所有任务
+     */
+    public void cancleTask(String tag){
+        if(netCache!=null){
+            netCache.cancleTask(tag);
+        }
     }
     /**
      * 清除本身所有属性

@@ -12,12 +12,16 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.picture.lib_rhythm.R;
+import com.picture.lib_rhythm.RequestCreator;
+import com.picture.lib_rhythm.bean.TagInfo;
 import com.picture.lib_rhythm.utils.BitmapUtils;
 import com.picture.lib_rhythm.widgets.gif.GifImageView;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Time:2019/11/7
@@ -31,6 +35,7 @@ public class NetCache {
     private Drawable errorDrawable;
     private Context mContext;
     private float radius=0f;
+    public BitmapTask bitmapTask;
     public NetCache(Cache lruCache,LocalCache localCache){
         this.lruCache=(LruCache) lruCache;
         this.localCache=localCache;
@@ -99,6 +104,7 @@ public class NetCache {
      * @param url
      */
     public void loadBitmap(final ImageView iv, final String url, Context context){
+        Log.d(TAG,"加载图片中*************");
         if(iv==null||TextUtils.isEmpty(url)||context==null){
             throw new NullPointerException("ImageView Can not be empty || url Can not be empty || context Can not be empty");
         }
@@ -110,10 +116,56 @@ public class NetCache {
                 if(bitmap!=null){
                     sendBitmap(bitmap);
                 }else{
-                    new BitmapTask().execute(iv, url);// 启动AsyncTask,
+                    bitmapTask=new BitmapTask();
+                    pushTaskToMap(url,bitmapTask);
+                    bitmapTask.execute(iv, url);// 启动AsyncTask,
                 }
             }
         });
+    }
+
+    /**
+     * 将所有异步任务存储
+     * @param url
+     * @param bitmapTask
+     */
+    private void pushTaskToMap(String url,BitmapTask bitmapTask){
+        RequestCreator.getInstance().taskMap.put(url,bitmapTask);
+    }
+    /**
+     * 取消单个请求
+     */
+    public void cancleTask(String tag){
+        Map<String,NetCache.BitmapTask>taskMap= RequestCreator.getInstance().taskMap;
+        Iterator<String> iterator =taskMap.keySet().iterator();// map中key（键）的迭代器对象
+        while (iterator.hasNext()){// 循环取键值进行判断
+            String key = iterator.next();// 键
+            if(tag.equals(key)){
+                BitmapTask bitmapTask = taskMap.get(key);
+                if(bitmapTask!=null){
+                    bitmapTask.cancel(true);
+                    iterator.remove();
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     * 取消全部请求
+     */
+    public void cancleAllTask(){
+        Map<String,NetCache.BitmapTask>taskMap= RequestCreator.getInstance().taskMap;
+        Iterator<String> iterator =taskMap.keySet().iterator();// map中key（键）的迭代器对象
+        while (iterator.hasNext()){// 循环取键值进行判断
+            String key = iterator.next();// 键
+                BitmapTask bitmapTask = taskMap.get(key);
+                if(bitmapTask!=null){
+                    bitmapTask.cancel(true);
+                    iterator.remove();
+                }
+
+        }
     }
 
     /**
@@ -139,7 +191,7 @@ public class NetCache {
      * 第二个泛型: 更新进度的泛型,
      * 第三个泛型是onPostExecute的返回结果
      */
-    class BitmapTask extends AsyncTask<Object, Void, Bitmap> {
+    public class BitmapTask extends AsyncTask<Object, Void, Bitmap> {
 
         private ImageView ivPicture;
         private String url;

@@ -6,6 +6,18 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     tools:context=".ListActivity">
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="取消加载所有"
+        android:id="@+id/bt_cancleall"
+        />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="取消加载所有"
+        android:id="@+id/bt_canclesingle"
+        />
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

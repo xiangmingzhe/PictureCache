@@ -2,16 +2,13 @@ package com.example.dell.picturecache;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.picture.lib_rhythm.Rhythm;
-import com.picture.lib_rhythm.TypeEnum;
+import com.picture.lib_rhythm.constant.GraphicalType;
 
 public class MainActivity extends Activity {
     private Button bt_loadimage;
@@ -20,6 +17,7 @@ public class MainActivity extends Activity {
     private Button bt_loadimage_circular;
     private ImageView imageView;
     private Button bt_loadimage_list;
+    private Button bt_loadimage_progress;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +31,7 @@ public class MainActivity extends Activity {
         bt_loadimage_circular=findViewById(R.id.bt_loadimage_circular);
         bt_loadimage_list=findViewById(R.id.bt_loadimage_list);
         imageView=findViewById(R.id.image);
+        bt_loadimage_progress=findViewById(R.id.bt_loadimage_progress);
         bt_loadimage_list.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,7 +51,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Rhythm.with(MainActivity.this)
-                        .style(TypeEnum.CIRCLE).boarder(3)
+                        .style(GraphicalType.CIRCLE).boarder(3)
                         .load("https://pics7.baidu.com/feed/e1fe9925bc315c6019816a380ec27c164854774d.jpeg?token=d21ab74381ca956c4ca28ef5c90e4868&s=30FE7084C273359450A844900300708E")
                         .into(imageView);
             }
@@ -68,6 +67,12 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Rhythm.with(MainActivity.this).transform(10.0f).load("https://uinpay.oss-cn-shenzhen.aliyuncs.com/icon/20190515/caifu.png").openGif(false).error(R.drawable.robot).placeholder(R.drawable.robot).into(imageView);
+            }
+        });
+        bt_loadimage_progress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
     }

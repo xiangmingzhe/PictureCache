@@ -1,6 +1,7 @@
 package com.picture.lib_rhythm.utils;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -13,6 +14,11 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
+import android.widget.ImageView;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 /**
  * Time:2019/11/11
@@ -24,32 +30,29 @@ public class BitmapUtils {
     /**
      * 把图片变成圆角
      *
-     * @param bitmap
-     *            需要修改的图片
-     * @param pixels
-     *            圆角的弧度
+     * @param bitmap 需要修改的图片
+     * @param pixels 圆角的弧度
      * @return 圆角图片
      */
-    public static Bitmap toRoundCorner(Bitmap bitmap, float pixels,int boarder) {
-        return getRoundBitmapByShader(bitmap,bitmap.getWidth(),bitmap.getHeight(),pixels,boarder);
+    public static Bitmap toRoundCorner(Bitmap bitmap, float pixels, int boarder) {
+        return getRoundBitmapByShader(bitmap, bitmap.getWidth(), bitmap.getHeight(), pixels, boarder);
     }
     /** */
     /**
      * 把图片变成圆角
      *
-     * @param drawable
-     *            需要修改的图片
-     * @param pixels
-     *            圆角的弧度
+     * @param drawable 需要修改的图片
+     * @param pixels   圆角的弧度
      * @return 圆角图片
      */
-    public static Bitmap toRoundCorner(Drawable drawable, float pixels,int boarder) {
-        Bitmap bitmap=DrawableToBitmap(drawable);
-        return getRoundBitmapByShader(bitmap,bitmap.getWidth(),bitmap.getHeight(),pixels,boarder);
+    public static Bitmap toRoundCorner(Drawable drawable, float pixels, int boarder) {
+        Bitmap bitmap = DrawableToBitmap(drawable);
+        return getRoundBitmapByShader(bitmap, bitmap.getWidth(), bitmap.getHeight(), pixels, boarder);
     }
 
     /**
      * 通过BitmapShader 圆角边框
+     *
      * @param bitmap
      * @param outWidth
      * @param outHeight
@@ -96,6 +99,7 @@ public class BitmapUtils {
 
     /**
      * Drawable  转bitmap
+     *
      * @param drawable
      * @return
      */
@@ -121,6 +125,7 @@ public class BitmapUtils {
 
     /**
      * 创建圆形图片
+     *
      * @param source
      * @return
      */
@@ -136,20 +141,23 @@ public class BitmapUtils {
         Bitmap bitmap = Bitmap.createBitmap(width, height, source.getConfig());
         Canvas canvas = new Canvas(bitmap);
         //bitmap的显示由画笔paint来决定
-        canvas.drawCircle(width * 0.5f, height *0.5f, raduis, paint);
+        canvas.drawCircle(width * 0.5f, height * 0.5f, raduis, paint);
         return bitmap;
     }
+
     /**
      * 创建圆形图片
+     *
      * @param source
      * @return
      */
-    public static Bitmap createCircleImage(Bitmap source,int boarder) {
-        return getCircleBitmapByShader(source,source.getWidth(),source.getHeight(),boarder);
+    public static Bitmap createCircleImage(Bitmap source, int boarder) {
+        return getCircleBitmapByShader(source, source.getWidth(), source.getHeight(), boarder);
     }
 
     /**
      * 通过BitmapShader 圆形边框
+     *
      * @param bitmap
      * @param outWidth
      * @param outHeight
@@ -190,5 +198,38 @@ public class BitmapUtils {
             canvas.drawCircle(outWidth / 2, outHeight / 2, radius - boarder, boarderPaint);
         }
         return desBitmap;
+    }
+
+    /**
+     * 根据图片得到二进制
+     * @return
+     */
+    public static byte[] getBitmapByte(Bitmap bitmap) {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+        try {
+            out.flush();
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return out.toByteArray();
+    }
+
+    /**
+     * 根据二进制生成图片
+     * @param temp
+     * @return
+     */
+    public static Bitmap getBitmapFromByte(byte[] temp){
+        Log.d("getBitmapFromByte","根据二进制生成图片");
+
+        if(temp != null){
+            Log.d("getBitmapFromByte","getBitmapFromByte:"+temp.length);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(temp, 0, temp.length);
+            return bitmap;
+        }else{
+            return null;
+        }
     }
 }

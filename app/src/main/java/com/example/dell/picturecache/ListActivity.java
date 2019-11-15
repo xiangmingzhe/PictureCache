@@ -5,15 +5,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.Button;
 
 import com.example.dell.picturecache.adapter.RecyclerviewAdapter;
 import com.example.dell.picturecache.adapter.TestAdapter;
+import com.picture.lib_rhythm.Rhythm;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ListActivity extends Activity {
     private RecyclerView rcy;
+    private Button bt_cancleall;
+    private Button bt_canclesingle;
     private String url="https://pics7.baidu.com/feed/e1fe9925bc315c6019816a380ec27c164854774d.jpeg?token=d21ab74381ca956c4ca28ef5c90e4868&s=30FE7084C273359450A844900300708E";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +27,20 @@ public class ListActivity extends Activity {
         initView();
     }
     private void initView(){
+        bt_cancleall=findViewById(R.id.bt_cancleall);
+        bt_canclesingle=findViewById(R.id.bt_canclesingle);
+        bt_cancleall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Rhythm.with(ListActivity.this).cancleAllTask();
+            }
+        });
+        bt_canclesingle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Rhythm.with(ListActivity.this).cancleTask("http://res.img.ifeng.com/2012/0428/wm_0ebc84813b2d4ac3b4096d6cbbe196d9.jpg");
+            }
+        });
         rcy=findViewById(R.id.rcy);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -32,12 +51,12 @@ public class ListActivity extends Activity {
     }
     private List<String>urlList(){
         List<String>stringList=new ArrayList<>();
-        stringList.add("http://g.hiphotos.baidu.com/image/pic/item/d52a2834349b033b95e7b4601fce36d3d539bd19.jpg");
-        stringList.add("http://e.hiphotos.baidu.com/image/pic/item/4610b912c8fcc3cef70d70409845d688d53f20f7.jpg");
-//        stringList.add("http://g.hiphotos.baidu.com/image/pic/item/c2cec3fdfc03924590b2a9b58d94a4c27d1e2500.jpg");
-//        stringList.add("http://h.hiphotos.baidu.com/image/pic/item/0b46f21fbe096b63491b16ea06338744ebf8ac0e.jpg");
-//        stringList.add("http://g.hiphotos.baidu.com/image/pic/item/279759ee3d6d55fb1cc13e9c67224f4a20a4dd01.jpg");
-//        stringList.add("http://f.hiphotos.baidu.com/image/pic/item/11385343fbf2b2114e41cdf4c08065380cd78e19.jpg");
+        stringList.add("http://pic1.win4000.com/wallpaper/5/58e6f9a62e989.jpg");
+        stringList.add("http://img4.imgtn.bdimg.com/it/u=3749936194,4185944615&fm=214&gp=0.jpg");
+        stringList.add("http://res.img.ifeng.com/2012/0428/wm_0ebc84813b2d4ac3b4096d6cbbe196d9.jpg");
+        stringList.add("http://pic1.win4000.com/wallpaper/5/58e6f99e65c3a.jpg");
+        stringList.add("http://img010.hc360.cn/m1/M05/7D/12/wKhQcFQ1ZiKEC66RAAAAAHBFgKg402.jpg");
+        stringList.add("http://img003.hc360.cn/m6/M04/4D/73/wKhQolYohXeEfWz9AAAAAEFYOl4869.JPG");
 
         return  stringList;
     }

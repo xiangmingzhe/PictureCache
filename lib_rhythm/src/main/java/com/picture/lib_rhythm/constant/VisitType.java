@@ -1,11 +1,12 @@
-package com.picture.lib_rhythm;
+package com.picture.lib_rhythm.constant;
 
 /**
- * Time:2019/11/8
+ * Time:2019/11/14
  * Author:xmz-dell
  * Description:
+ * 访问类型
  */
-public enum  TypeEnum {
+public enum VisitType {
     /**
      * http请求
      */
@@ -18,12 +19,4 @@ public enum  TypeEnum {
      * 本地文件
      */
     LOCAL,
-    /**
-     * 圆形
-     */
-    CIRCLE,
-    /**
-     *
-     */
-    OVAL,
 }
