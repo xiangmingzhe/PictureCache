@@ -20,8 +20,9 @@ Rhythm.with(context).load(url).placeholder(R.drawable.xx).into(imageView);
 # 图片懒加载
 
 # 取消单个加载
-
+ Rhythm.with(ListActivity.this).cancleTask(tag);
 # 取消所有加载
+ Rhythm.with(context).cancleAllTask();
 
 # 加载图片模糊效果
 
