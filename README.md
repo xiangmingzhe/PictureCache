@@ -25,6 +25,8 @@ Rhythm.with(context).load(url).placeholder(R.drawable.xx).into(imageView);
  Rhythm.with(context).cancleAllTask();
 
 # 加载图片高斯模糊效果
+ Rhythm.with(context).bitmapTransform(new BlurTransformation(10)).into(imageView);
+ 其中BlurTransformation中分别包括模糊半径和指定模糊前缩小的倍数。
 
 
 # 动画相关
