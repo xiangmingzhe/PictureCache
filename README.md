@@ -24,7 +24,7 @@ Rhythm.with(context).load(url).placeholder(R.drawable.xx).into(imageView);
 # 取消所有加载
  Rhythm.with(context).cancleAllTask();
 
-# 加载图片模糊效果
+# 加载图片高斯模糊效果
 
 
 # 动画相关
