@@ -104,7 +104,6 @@ public class NetCache {
      * @param url
      */
     public void loadBitmap(final ImageView iv, final String url, Context context){
-        Log.d(TAG,"加载图片中*************");
         if(iv==null||TextUtils.isEmpty(url)||context==null){
             throw new NullPointerException("ImageView Can not be empty || url Can not be empty || context Can not be empty");
         }

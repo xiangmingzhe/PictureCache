@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import com.picture.lib_rhythm.Rhythm;
 import com.picture.lib_rhythm.constant.GraphicalType;
+import com.picture.lib_rhythm.transformation.BlurTransformation;
 
 public class MainActivity extends Activity {
     private Button bt_loadimage;
@@ -42,7 +43,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Rhythm.with(MainActivity.this)
-                        .transform(10.0f).boarder(3)
+                        .transform(10.0f)
                         .load("https://pics7.baidu.com/feed/e1fe9925bc315c6019816a380ec27c164854774d.jpeg?token=d21ab74381ca956c4ca28ef5c90e4868&s=30FE7084C273359450A844900300708E")
                         .into(imageView);
             }
@@ -52,7 +53,7 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 Rhythm.with(MainActivity.this)
                         .style(GraphicalType.CIRCLE).boarder(3)
-                        .load("https://pics7.baidu.com/feed/e1fe9925bc315c6019816a380ec27c164854774d.jpeg?token=d21ab74381ca956c4ca28ef5c90e4868&s=30FE7084C273359450A844900300708E")
+                        .load("https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3473688000,4044263570&fm=26&gp=0.jpg")
                         .into(imageView);
             }
         });
@@ -60,7 +61,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 int rid=R.drawable.robot;
-                Rhythm.with(MainActivity.this).transform(10.0f).load(rid).openGif(false).error(R.drawable.robot).placeholder(R.drawable.robot).into(imageView);
+                Rhythm.with(MainActivity.this).transform(10.0f).bitmapTransform(new BlurTransformation(10)).load(rid).openGif(false).error(R.drawable.robot).placeholder(R.drawable.robot).into(imageView);
             }
         });
         bt_loadimage_local.setOnClickListener(new View.OnClickListener() {
@@ -73,6 +74,24 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
 
+            }
+        });
+        findViewById(R.id.bt_loadimage_rsblue).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Rhythm.with(MainActivity.this)
+                         .bitmapTransform(new BlurTransformation(10))
+                        .load("https://pics7.baidu.com/feed/e1fe9925bc315c6019816a380ec27c164854774d.jpeg?token=d21ab74381ca956c4ca28ef5c90e4868&s=30FE7084C273359450A844900300708E")
+                        .into(imageView);
+            }
+        });
+        findViewById(R.id.bt_loadimage_animate).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Rhythm.with(MainActivity.this)
+                        .crossFade()
+                        .load("https://pics7.baidu.com/feed/e1fe9925bc315c6019816a380ec27c164854774d.jpeg?token=d21ab74381ca956c4ca28ef5c90e4868&s=30FE7084C273359450A844900300708E")
+                        .into(imageView);
             }
         });
     }

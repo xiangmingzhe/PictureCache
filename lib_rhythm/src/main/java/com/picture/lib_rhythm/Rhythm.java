@@ -5,17 +5,22 @@ import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.widget.ImageView;
 
+import com.picture.lib_rhythm.animate.AnimateManage;
 import com.picture.lib_rhythm.bean.TagInfo;
 import com.picture.lib_rhythm.cache.Cache;
 import com.picture.lib_rhythm.cache.Callback;
 import com.picture.lib_rhythm.cache.LocalCache;
 import com.picture.lib_rhythm.cache.LruCache;
 import com.picture.lib_rhythm.cache.NetCache;
+import com.picture.lib_rhythm.constant.AnimateType;
+import com.picture.lib_rhythm.transformation.BlurTransformation;
 import com.picture.lib_rhythm.utils.Utils;
 import com.picture.lib_rhythm.widgets.gif.GifImageView;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.picture.lib_rhythm.constant.AnimateType.DONT_ANIMATE;
 
 /**
  * Time:2019/11/7
@@ -41,7 +46,9 @@ public class Rhythm {
     private int boarder=0;
     private RequestCreator.Builder builder;
     public Map<String,TagInfo>tagInfo;
-
+    private AnimateType animateType;
+    private int animationID;
+    private BlurTransformation blurTransformation;
     public Rhythm(Context context, Cache lruCache, LocalCache localCache, NetCache netCache) {
         this.context = context;
         this.lruCache = lruCache;
@@ -133,6 +140,8 @@ public class Rhythm {
                 .transform(radius)
                 .style(style)
                 .boarder(boarder)
+                .bindAnimteType(animateType)
+                .bindAnimteId(animationID)
                 .createTask(url,target);
         RequestCreator.getInstance().createTask(builder);
         cleanAttr();
@@ -145,7 +154,7 @@ public class Rhythm {
     private void bindTag(){
         if(imageView!=null&&!TextUtils.isEmpty(url)){
             imageView.setTag(url);
-            tagInfo.put(url,new TagInfo(url,imageView));
+            tagInfo.put(url,new TagInfo(url,imageView,animateType,animationID,blurTransformation));
         }
     }
     /**
@@ -248,6 +257,40 @@ public class Rhythm {
     }
 
     /**
+     * 设置淡入淡出的效果
+     * @return
+     */
+    public Rhythm crossFade(){
+        animateType=AnimateType.CROSS_FADE;
+        return this;
+    }
+    /**
+     * 设置自定义动画
+     */
+    public Rhythm Animation(int animation){
+        animateType=AnimateType.ANIMATE;
+        animationID=animation;
+        return this;
+    }
+
+    /**
+     * 无动画
+     * @return
+     */
+    public Rhythm dontAnimation(){
+        animateType= DONT_ANIMATE;
+        return this;
+    }
+    /**
+     * 设置高斯模糊效果
+     * @return
+     */
+    public Rhythm bitmapTransform(BlurTransformation blurTransformation){
+        this.blurTransformation=blurTransformation;
+        return this;
+    }
+
+    /**
      * 清除所有任务
      */
     public void cancleAllTask(){
@@ -276,6 +319,9 @@ public class Rhythm {
         this.placeholderDrawable=null;
         this.radius=0f;
         this.boarder=0;
+        this.animateType=DONT_ANIMATE;
+        this.animationID=0;
+        this.blurTransformation=null;
         return this;
     }
     public static class Builder {

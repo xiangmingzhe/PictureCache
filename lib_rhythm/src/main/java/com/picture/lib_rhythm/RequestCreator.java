@@ -9,16 +9,20 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.picture.lib_rhythm.animate.AnimateManage;
 import com.picture.lib_rhythm.bean.TagInfo;
 import com.picture.lib_rhythm.cache.Cache;
 import com.picture.lib_rhythm.cache.LocalCache;
 import com.picture.lib_rhythm.cache.NetCache;
+import com.picture.lib_rhythm.constant.AnimateType;
 import com.picture.lib_rhythm.utils.BitmapUtils;
 import com.picture.lib_rhythm.utils.Utils;
 import com.picture.lib_rhythm.widgets.vague.VagueView;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.picture.lib_rhythm.constant.AnimateType.DONT_ANIMATE;
 
 
 /**
@@ -182,10 +186,14 @@ public class RequestCreator {
                 TagInfo mTagInfo=m.getValue();
                 if(!mTagInfo.isTag()){
                     ImageView imageView=mTagInfo.getInto();
-                    imageView.setImageBitmap(getBitmapFromStyle(bitmap));
+                    AnimateManage.getInstance().setAnimateID(mTagInfo.getAnimateID()).bindAnimate(imageView,mBuilder.context,mTagInfo.getAnimateType());
+                    Bitmap sourceBitmap=getBitmapFromStyle(bitmap);
+                    if(mTagInfo.getBlurTransformation()!=null){
+                        sourceBitmap=BitmapUtils.rsBlur(mBuilder.context,sourceBitmap,mTagInfo.getBlurTransformation().getRadius(),mTagInfo.getBlurTransformation().getScale());
+                    }
+                    imageView.setImageBitmap(sourceBitmap);
                     mTagInfo.setTag(true);
                     Rhythm.singleton.tagInfo.put(mTagInfo.getUrl(),mTagInfo);
-                    VagueView.with(mBuilder.context).into(imageView).targetResources(getBitmapFromStyle(bitmap)).buildVagueView();
                     break;
                 }
 
@@ -250,6 +258,8 @@ public class RequestCreator {
         private float radius;
         private Enum style;
         private int boarder;
+        private AnimateType animateType;
+        private int animationID;
         public Builder addLruCache(Cache lruCache) {
             this.lruCache = lruCache;
             return this;
@@ -337,7 +347,18 @@ public class RequestCreator {
             this.boarder=boarder;
             return this;
         }
-
+        /**
+         * 设置淡入淡出的效果
+         * @return
+         */
+        public Builder bindAnimteType(AnimateType animateType){
+            this.animateType=animateType;
+            return this;
+        }
+        public Builder bindAnimteId(int animationID){
+            this.animationID=animationID;
+            return this;
+        }
         public Builder createTask(String url, ImageView image) {
             this.url = url;
             this.imageView = image;
@@ -350,7 +371,7 @@ public class RequestCreator {
         private void bindTag(){
             if(imageView!=null&&!TextUtils.isEmpty(url)){
                 imageView.setTag(url);
-                tagInfo.put(url,new TagInfo(url,imageView));
+                tagInfo.put(url,new TagInfo(url,imageView,animateType,animationID));
             }
         }
         /**
@@ -367,6 +388,8 @@ public class RequestCreator {
             this.placeholderDrawable=null;
             this.radius=0f;
             this.boarder=0;
+            this.animateType=DONT_ANIMATE;
+            this.animationID=0;
         }
     }
 }

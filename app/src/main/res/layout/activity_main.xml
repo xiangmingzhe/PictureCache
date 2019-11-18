@@ -63,4 +63,18 @@
         android:textColor="#000000"
         android:id="@+id/bt_loadimage_progress"
         />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="加载高斯模糊图片"
+        android:textColor="#000000"
+        android:id="@+id/bt_loadimage_rsblue"
+        />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="加载淡入淡出动画"
+        android:textColor="#000000"
+        android:id="@+id/bt_loadimage_animate"
+        />
 </LinearLayout>

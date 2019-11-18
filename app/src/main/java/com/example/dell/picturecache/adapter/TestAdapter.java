@@ -27,13 +27,23 @@ public class TestAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
     }
     @Override
     protected void convert(BaseViewHolder helper, String item) {
-        Log.d(TAG,"tag-n debug item:"+item);
         ImageView imageView=helper.getView(R.id.image);
-        Rhythm.with(mContext)
-                .transform(10.0f).boarder(3)
-                .load(item)
-                .placeholder(R.drawable.ic_launcher_background)
-                .error(R.drawable.robot)
-                .into(imageView);
+        if(helper.getPosition()!=1){
+            Rhythm.with(mContext)
+                    .transform(10.0f).boarder(3)
+                    .load(item)
+                    .crossFade()
+                    .placeholder(R.drawable.ic_launcher_background)
+                    .error(R.drawable.robot)
+                    .into(imageView);
+        }else{
+            Rhythm.with(mContext)
+                    .transform(10.0f).boarder(3)
+                    .load(item)
+                    .placeholder(R.drawable.ic_launcher_background)
+                    .error(R.drawable.robot)
+                    .into(imageView);
+        }
+
     }
 }
