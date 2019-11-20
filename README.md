@@ -1,5 +1,5 @@
 # PictureCache
-# PictureCache是一个图片加载框架,支持gif图片加载、设置圆角。
+# PictureCache是一个图片加载框架,调用方式跟其他库方式无异,对比与其他库来说，更轻量级.
  
 # 设置图片四周圆角:
  Rhythm.with(context).load(url).transform(10.0f).into(imageView);
