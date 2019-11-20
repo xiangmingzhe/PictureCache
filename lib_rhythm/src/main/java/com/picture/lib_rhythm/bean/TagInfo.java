@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.widget.ImageView;
 
 import com.picture.lib_rhythm.constant.AnimateType;
+import com.picture.lib_rhythm.constant.Watermark;
 import com.picture.lib_rhythm.transformation.BlurTransformation;
 
 /**
@@ -18,6 +19,7 @@ public class TagInfo {
     private AnimateType animateType;
     private int animateID;
     private boolean isTag;
+    private WatermarkInfo watermarkInfo;
     private BlurTransformation blurTransformation;
     public TagInfo(String url,ImageView into){
         this.url=url;
@@ -35,6 +37,14 @@ public class TagInfo {
         this.animateType=animateType;
         this.animateID=animateID;
         this.blurTransformation=blurTransformation;
+    }
+    public TagInfo(String url,ImageView into,AnimateType animateType,int animateID,BlurTransformation blurTransformation,WatermarkInfo watermarkInfo){
+        this.url=url;
+        this.into=into;
+        this.animateType=animateType;
+        this.animateID=animateID;
+        this.blurTransformation=blurTransformation;
+        this.watermarkInfo=watermarkInfo;
     }
     public boolean isTag() {
         return isTag;
@@ -90,5 +100,13 @@ public class TagInfo {
 
     public void setBlurTransformation(BlurTransformation blurTransformation) {
         this.blurTransformation = blurTransformation;
+    }
+
+    public WatermarkInfo getWatermarkInfo() {
+        return watermarkInfo;
+    }
+
+    public void setWatermarkInfo(WatermarkInfo watermarkInfo) {
+        this.watermarkInfo = watermarkInfo;
     }
 }

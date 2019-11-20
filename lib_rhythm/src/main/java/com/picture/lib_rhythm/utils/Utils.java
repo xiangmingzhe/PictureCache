@@ -8,6 +8,8 @@ import android.os.Looper;
 import android.os.StatFs;
 import android.util.Log;
 
+import com.picture.lib_rhythm.constant.VisitType;
+
 import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -138,7 +140,7 @@ public class Utils {
      * @param url
      * @return
      */
-    public static Enum getUrlType(String url){
+    public static VisitType getUrlType(String url){
         if(isNetUrl(url)){
             return HTTP;
         }else if(isResourcesId(url)){

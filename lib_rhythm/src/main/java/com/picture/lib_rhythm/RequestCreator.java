@@ -11,10 +11,13 @@ import android.widget.ImageView;
 
 import com.picture.lib_rhythm.animate.AnimateManage;
 import com.picture.lib_rhythm.bean.TagInfo;
+import com.picture.lib_rhythm.bean.WatermarkInfo;
 import com.picture.lib_rhythm.cache.Cache;
 import com.picture.lib_rhythm.cache.LocalCache;
 import com.picture.lib_rhythm.cache.NetCache;
 import com.picture.lib_rhythm.constant.AnimateType;
+import com.picture.lib_rhythm.constant.VisitType;
+import com.picture.lib_rhythm.constant.Watermark;
 import com.picture.lib_rhythm.utils.BitmapUtils;
 import com.picture.lib_rhythm.utils.Utils;
 import com.picture.lib_rhythm.widgets.vague.VagueView;
@@ -58,10 +61,10 @@ public class RequestCreator {
         this.mBuilder = builder;
         if (mBuilder != null) {
             setOccupationMap();
-            Enum type = Utils.getUrlType(mBuilder.url);
+            VisitType type = Utils.getUrlType(mBuilder.url);
             Log.d(TAG, "tag-n debug 接收到的类型为:" + type.name());
-            switch (type.name()) {
-                case "HTTP":
+            switch (type) {
+                case HTTP:
                     mBuilder.netCache.transform(mBuilder.radius).error(getErrorDrawable())
                             .setOnLoadSuccessListener(new NetCache.OnLoadSuccessListener() {
                                 @Override
@@ -71,7 +74,7 @@ public class RequestCreator {
                             })
                             .loadBitmap(mBuilder.imageView, mBuilder.url, mBuilder.context);
                     break;
-                case "RESOURCES":
+                case RESOURCES:
                     new Handler().post(new Runnable() {
                         @Override
                         public void run() {
@@ -81,7 +84,7 @@ public class RequestCreator {
                         }
                     });
                     break;
-                case "LOCAL":
+                case LOCAL:
                     new Handler().post(new Runnable() {
                         @Override
                         public void run() {
@@ -188,6 +191,9 @@ public class RequestCreator {
                     ImageView imageView=mTagInfo.getInto();
                     AnimateManage.getInstance().setAnimateID(mTagInfo.getAnimateID()).bindAnimate(imageView,mBuilder.context,mTagInfo.getAnimateType());
                     Bitmap sourceBitmap=getBitmapFromStyle(bitmap);
+                    if(mTagInfo.getWatermarkInfo()!=null){
+                        sourceBitmap=getWatemarkBitmap(mTagInfo.getWatermarkInfo(),sourceBitmap);
+                    }
                     if(mTagInfo.getBlurTransformation()!=null){
                         sourceBitmap=BitmapUtils.rsBlur(mBuilder.context,sourceBitmap,mTagInfo.getBlurTransformation().getRadius(),mTagInfo.getBlurTransformation().getScale());
                     }
@@ -223,6 +229,34 @@ public class RequestCreator {
             }
         }
         return  bitmap;
+    }
+
+    /**
+     * 获取水印照片
+     * @param watermarkInfo
+     * @param mBitmap
+     * @return
+     */
+    private Bitmap getWatemarkBitmap(WatermarkInfo watermarkInfo, Bitmap mBitmap){
+        Watermark watermark=watermarkInfo.getWatermark();
+        switch (watermark){
+            case LEFT_TOP:
+                mBitmap= BitmapUtils.createWaterMaskLeftTop(mBitmap,watermarkInfo.getBitmap(),watermarkInfo.getPaddingLeft(),watermarkInfo.getPaddingTop());
+                break;
+            case RIGHT_BOTTOM:
+                mBitmap= BitmapUtils.createWaterMaskRightBottom(mBitmap,watermarkInfo.getBitmap(),watermarkInfo.getPaddingRight(),watermarkInfo.getPaddingBottom());
+                break;
+            case RIGHT_TOP:
+                mBitmap= BitmapUtils.createWaterMaskRightBottom(mBitmap,watermarkInfo.getBitmap(),watermarkInfo.getPaddingRight(),watermarkInfo.getPaddingTop());
+                break;
+            case LEFT_BOTTOM:
+                mBitmap= BitmapUtils.createWaterMaskRightBottom(mBitmap,watermarkInfo.getBitmap(),watermarkInfo.getPaddingLeft(),watermarkInfo.getPaddingBottom());
+                break;
+            case CENTER:
+                mBitmap= BitmapUtils.createWaterMaskCenter(mBitmap,watermarkInfo.getBitmap());
+                break;
+        }
+        return mBitmap;
     }
     /**
      * 判断目标控件是否跟url相匹配
@@ -260,6 +294,7 @@ public class RequestCreator {
         private int boarder;
         private AnimateType animateType;
         private int animationID;
+        private Watermark watermark;
         public Builder addLruCache(Cache lruCache) {
             this.lruCache = lruCache;
             return this;
@@ -359,6 +394,8 @@ public class RequestCreator {
             this.animationID=animationID;
             return this;
         }
+
+
         public Builder createTask(String url, ImageView image) {
             this.url = url;
             this.imageView = image;

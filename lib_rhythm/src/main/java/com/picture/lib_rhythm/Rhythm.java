@@ -7,12 +7,14 @@ import android.widget.ImageView;
 
 import com.picture.lib_rhythm.animate.AnimateManage;
 import com.picture.lib_rhythm.bean.TagInfo;
+import com.picture.lib_rhythm.bean.WatermarkInfo;
 import com.picture.lib_rhythm.cache.Cache;
 import com.picture.lib_rhythm.cache.Callback;
 import com.picture.lib_rhythm.cache.LocalCache;
 import com.picture.lib_rhythm.cache.LruCache;
 import com.picture.lib_rhythm.cache.NetCache;
 import com.picture.lib_rhythm.constant.AnimateType;
+import com.picture.lib_rhythm.constant.Watermark;
 import com.picture.lib_rhythm.transformation.BlurTransformation;
 import com.picture.lib_rhythm.utils.Utils;
 import com.picture.lib_rhythm.widgets.gif.GifImageView;
@@ -47,6 +49,7 @@ public class Rhythm {
     private RequestCreator.Builder builder;
     public Map<String,TagInfo>tagInfo;
     private AnimateType animateType;
+    private WatermarkInfo watermarkInfo;
     private int animationID;
     private BlurTransformation blurTransformation;
     public Rhythm(Context context, Cache lruCache, LocalCache localCache, NetCache netCache) {
@@ -154,7 +157,7 @@ public class Rhythm {
     private void bindTag(){
         if(imageView!=null&&!TextUtils.isEmpty(url)){
             imageView.setTag(url);
-            tagInfo.put(url,new TagInfo(url,imageView,animateType,animationID,blurTransformation));
+            tagInfo.put(url,new TagInfo(url,imageView,animateType,animationID,blurTransformation,watermarkInfo));
         }
     }
     /**
@@ -289,7 +292,15 @@ public class Rhythm {
         this.blurTransformation=blurTransformation;
         return this;
     }
-
+    /**
+     * 设置水印
+     * @param watermarkInfo
+     * @return
+     */
+    public Rhythm watermark(WatermarkInfo watermarkInfo){
+        this.watermarkInfo=watermarkInfo;
+        return this;
+    }
     /**
      * 清除所有任务
      */
@@ -322,6 +333,7 @@ public class Rhythm {
         this.animateType=DONT_ANIMATE;
         this.animationID=0;
         this.blurTransformation=null;
+        this.watermarkInfo=null;
         return this;
     }
     public static class Builder {
