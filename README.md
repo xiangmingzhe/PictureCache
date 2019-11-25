@@ -32,26 +32,26 @@ Rhythm.with(context).load(url).placeholder(R.drawable.xx).into(imageView);
 # 动画相关
 ### 图片淡入淡出效果
  Rhythm.with(context).load(url).crossFade().into(imageView);
-# 支持图片自定义动画
+### 支持图片自定义动画
 Rhythm.with(context).load(url).Animation(R.anim.xx).into(imageView);
-# 设置无动画
+### 设置无动画
 Rhythm.with(context).load(url).dontAnimation().into(imageView);
 # 增加图片水印功能,详细功能:分为居中,左上角,右上角,左下角,右下角
-# (1)居中水印
+### (1)居中水印
 Rhythm.with(context).load(url).watermark(new WatermarkInfo(Watermark.CENTER,watermakeBitmap)).into(imageView);
-# (2)左上角水印
+### (2)左上角水印
  Rhythm.with(context).load(url)
                      .watermark(new WatermarkInfo(Watermark.LEFT_TOP,watermakeBitmap,paddingLeft,paddingTop,paddingRight,paddingBottom))
                      .into(imageView);
-# (3)右上角水印                    
+### (3)右上角水印                    
  Rhythm.with(context).load(url)
                     .watermark(new WatermarkInfo(Watermark.RIGHT_TOP,watermakeBitmap,paddingLeft,paddingTop,paddingRight,paddingBottom))
                      .into(imageView);
-# (4)左下角水印                    
+### (4)左下角水印                    
  Rhythm.with(context).load(url)
                   .watermark(new WatermarkInfo(Watermark.LEFT_BOTTOM,watermakeBitmap,paddingLeft,paddingTop,paddingRight,paddingBottom))
                      .into(imageView);                     
-# (5)右下角水印                    
+### (5)右下角水印                    
  Rhythm.with(context).load(url)
                 .watermark(new WatermarkInfo(Watermark.RIGHT_BOTTOM,watermakeBitmap,paddingLeft,paddingTop,paddingRight,paddingBottom))
                      .into(imageView);   
