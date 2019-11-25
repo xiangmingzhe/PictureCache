@@ -30,7 +30,7 @@ Rhythm.with(context).load(url).placeholder(R.drawable.xx).into(imageView);
 
 
 # 动画相关
-## 图片淡入淡出效果
+### 图片淡入淡出效果
  Rhythm.with(context).load(url).crossFade().into(imageView);
 # 支持图片自定义动画
 Rhythm.with(context).load(url).Animation(R.anim.xx).into(imageView);
