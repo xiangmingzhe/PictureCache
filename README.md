@@ -1,5 +1,6 @@
 # PictureCache
-## PictureCache是一个图片加载框架,调用方式跟其他库方式无异,对比与其他库来说，更轻量级。
+## PictureCache是一个图片加载框架,调用方式跟其他库方式无异,对比与其他库来说，更轻量级
+###简书地址:https://www.jianshu.com/p/e9a458a18be8
  
 ## 设置图片四周圆角:
  Rhythm.with(context).load(url).transform(10.0f).into(imageView);
