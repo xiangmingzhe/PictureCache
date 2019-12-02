@@ -3,8 +3,23 @@
 ### 简书地址:https://www.jianshu.com/p/e9a458a18be8
  
 # Android Studio集成方式
- 
- 
+### 项目的build.gradle中引用如下:
+  ```
+ implementation 'com.lib:pic_cache:1.0.1'
+  
+  ```
+### 根项目的build.gradle引用如下:
+
+```
+allprojects {
+    repositories {
+        google()
+        jcenter()
+        maven {  url "https://raw.githubusercontent.com/xiangmingzhe/PictureCache/master"}
+    }
+}
+```
+
 ## 设置图片四周圆角:
  Rhythm.with(context).load(url).transform(10.0f).into(imageView);
 ## 设置占位图: 
