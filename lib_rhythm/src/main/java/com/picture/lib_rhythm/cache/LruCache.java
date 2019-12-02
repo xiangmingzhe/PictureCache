@@ -19,7 +19,7 @@ public class LruCache implements Cache{
     private int maxSize;
     private int cacheCount; //缓存计数
     private int evictionCount;//清除计数
-    private final LinkedHashMap<String, Bitmap> map; //单向链表hashmap
+    private final LinkedHashMap<String, Bitmap> map;
 
     public LruCache(Context context){
         this(Utils.calculateMemoryCacheSize(context));

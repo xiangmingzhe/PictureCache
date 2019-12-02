@@ -26,7 +26,7 @@ import java.util.Map;
 /**
  * Time:2019/11/7
  * Author:xmz-dell
- * Description:
+ * Description:网络缓存类
  */
 public class NetCache {
     private LruCache lruCache;
@@ -75,10 +75,7 @@ public class NetCache {
      * @return
      */
     private boolean isRoundCorner(){
-        if(radius!=0f){
-            return true;
-        }
-        return false;
+        return radius!=0f?true:false;
     }
     /**
      * 设置错误视图
@@ -228,10 +225,6 @@ public class NetCache {
             if (result != null) {
                 String bindUrl = (String) ivPicture.getTag();
                 if (url.equals(bindUrl)) {// 确保图片设定给了正确的imageview
-//                    if(isRoundCorner()){
-//                        result= BitmapUtils.toRoundCorner(result,radius);
-//                    }
-//                    ivPicture.setImageBitmap(result);
                     sendBitmap(result);
                     localCache.setBitmapToLocal(url, result);// 将图片保存在本地
                     lruCache.set(url, result);// 将图片保存在内存

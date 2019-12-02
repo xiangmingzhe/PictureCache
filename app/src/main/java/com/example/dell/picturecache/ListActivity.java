@@ -58,6 +58,20 @@ public class ListActivity extends Activity {
         stringList.add("http://img010.hc360.cn/m1/M05/7D/12/wKhQcFQ1ZiKEC66RAAAAAHBFgKg402.jpg");
         stringList.add("http://img003.hc360.cn/m6/M04/4D/73/wKhQolYohXeEfWz9AAAAAEFYOl4869.JPG");
 
+
+
+        stringList.add("https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1186878998,3597197046&fm=15&gp=0.jpg");
+        stringList.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1574660491422&di=1b9f7210e98335c311e575eff160a871&imgtype=0&src=http%3A%2F%2Fpic1.win4000.com%2Fwallpaper%2F7%2F57eb892e7431e.jpg");
+        stringList.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1574660491422&di=7239a2eca34de15dc0ae362a938f499d&imgtype=0&src=http%3A%2F%2Fwww.qqoi.cn%2Fimg_bizhi%2F70707972.jpeg");
+        stringList.add("https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3120478776,2048301353&fm=26&gp=0.jpg");
+        stringList.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1574660491421&di=1d37d910b7d6c153d2d561ffe74e3a0b&imgtype=0&src=http%3A%2F%2Fpic1.win4000.com%2Fwallpaper%2F2018-11-27%2F5bfce839a79b4.jpg");
+        stringList.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1574660491421&di=7bede38544b5528cacf5c3c2acb9de51&imgtype=0&src=http%3A%2F%2Fp2.qhimgs4.com%2Ft0173189944640e215c.jpg");
+        stringList.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1574660491420&di=0534745e2197fab1c37746e1b89c9beb&imgtype=0&src=http%3A%2F%2Fsc.68design.net%2Fphotofiles%2F201807%2FKUukqkpm5n.jpg");
+        stringList.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1574660491419&di=6ed3929f5f638906648718c694f536ff&imgtype=0&src=http%3A%2F%2Fimg-download.pchome.net%2Fdownload%2F1k1%2F34%2F55%2Fofhy7l-1o88.jpg");
+        stringList.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1574660491419&di=2e262de1639d01787a8226189b383744&imgtype=0&src=http%3A%2F%2Fstatic01.coloros.com%2Fbbs%2Fdata%2Fattachment%2Fforum%2F201508%2F27%2F084342curucwvezb30cll0.jpg");
+
+
+
         return  stringList;
     }
 }

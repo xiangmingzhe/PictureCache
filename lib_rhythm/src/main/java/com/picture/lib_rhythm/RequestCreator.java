@@ -247,10 +247,10 @@ public class RequestCreator {
                 mBitmap= BitmapUtils.createWaterMaskRightBottom(mBitmap,watermarkInfo.getBitmap(),watermarkInfo.getPaddingRight(),watermarkInfo.getPaddingBottom());
                 break;
             case RIGHT_TOP:
-                mBitmap= BitmapUtils.createWaterMaskRightBottom(mBitmap,watermarkInfo.getBitmap(),watermarkInfo.getPaddingRight(),watermarkInfo.getPaddingTop());
+                mBitmap= BitmapUtils.createWaterMaskRightTop(mBitmap,watermarkInfo.getBitmap(),watermarkInfo.getPaddingRight(),watermarkInfo.getPaddingTop());
                 break;
             case LEFT_BOTTOM:
-                mBitmap= BitmapUtils.createWaterMaskRightBottom(mBitmap,watermarkInfo.getBitmap(),watermarkInfo.getPaddingLeft(),watermarkInfo.getPaddingBottom());
+                mBitmap= BitmapUtils.createWaterMaskLeftBottom(mBitmap,watermarkInfo.getBitmap(),watermarkInfo.getPaddingLeft(),watermarkInfo.getPaddingBottom());
                 break;
             case CENTER:
                 mBitmap= BitmapUtils.createWaterMaskCenter(mBitmap,watermarkInfo.getBitmap());
