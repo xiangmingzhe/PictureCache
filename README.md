@@ -11,8 +11,6 @@
 Rhythm.with(context).load(url).placeholder(R.drawable.xx).into(imageView);
 ## 加载错误视图:
  Rhythm.with(context).load(url).error(R.drawable.xx).into(imageView);
-## 开启加载gif图片(正在优化)
- Rhythm.with(context).load(url).openGif(false).into(imageView);
 ## 设置成圆形图片
  Rhythm.with(context).load(url).style(TypeEnum.CIRCLE).into(imageView);
 ## 设置圆形or圆角图片边框
