@@ -1,5 +1,7 @@
 # PictureCache
-## PictureCache是一个图片加载框架,调用方式跟其他库方式无异,对比与其他库来说，更轻量级
+## 关于
+### PictureCache 是一个功能强大且易于使用的Android库。该库封装了Android开发中的大部分图片加载时的需求,通过使用其封装的API,可以大大提高开发效率。
+使用效果,请根据简书地址查看。
 ### 简书地址:https://www.jianshu.com/p/e9a458a18be8
  
 # Android Studio集成方式
