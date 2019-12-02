@@ -1,7 +1,7 @@
 # PictureCache
 ## 关于
 ### PictureCache 是一个功能强大且易于使用的Android库。该库封装了Android开发中的大部分图片加载时的需求,通过使用其封装的API,可以大大提高开发效率。
-使用效果,请根据简书地址查看。
+### 使用效果,请根据简书地址查看。
 ### 简书地址:https://www.jianshu.com/p/e9a458a18be8
  
 # Android Studio集成方式
